@@ -1,10 +1,4 @@
 # React + Vite
-## `npm create vite@latest my-vue-app`  for create new react project
-- [https://vitejs.dev/guide/]
-
-## `npm i`  for create node_module folder
-
-## `npm run dev`  for start project
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
