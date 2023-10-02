@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from 'react'
+import {useState, useCallback, useEffect, useRef} from 'react'
 import './app.css'
 
 export function App() {
@@ -6,6 +6,8 @@ export function App() {
   const [numberAllowed, setNumberAllowed] = useState(false)
   const [charAllowed, setCharAllowed] = useState(false)
   const [password, setPassword] = useState('')
+
+  /// useCallback uses for chache memory (store in memory)
   const passwordGenerator = useCallback(() => {
     let pass = ""
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -15,13 +17,24 @@ export function App() {
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1)
       pass += str.charAt(char)
-      console.log('passInner',pass)
-      
+      // console.table('passInner:', pass, 'Char:', char)
     }
-    setPassword(pass)
-  }, [length, numberAllowed, charAllowed, setPassword])
-  console.log('pass',password)
 
+    setPassword(pass)
+  }, [length, numberAllowed, charAllowed, setPassword])  
+  // console.table('getPass:',password)
+
+   //useRef hook
+   const passwordRef = useRef(null)
+
+  const copyPasswordToClipboard = useCallback(() => {
+    passwordRef.current?.select();
+    passwordRef.current?.setSelectionRange(0, 999);
+    window.navigator.clipboard.writeText(password)
+  }, [password])
+
+
+  //// useEffect uses for re rendering (if any changes then change on same time)
   useEffect(() => {
     passwordGenerator()
   }, [length, numberAllowed, charAllowed, passwordGenerator])
@@ -37,13 +50,14 @@ export function App() {
     <div className="flex shadow rounded-lg overflow-hidden mb-4">
         <input
             type="text"
-            value=''
+            value={password}
             className="outline-none w-full py-1 px-3"
             placeholder="Password"
             readOnly
-            ref=''
+            ref={passwordRef}
+            
         />
-        <button        
+        <button onClick={copyPasswordToClipboard}        
         className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'
         >copy</button>
         
@@ -54,16 +68,19 @@ export function App() {
         type="range"
         min={6}
         max={100}
-        value=''
+        value={length}
          className='cursor-pointer'
+         title={length}
+         onChange={(e) => {setLength(e.target.value)}}
           />
-          <label>Length: </label>
+          <label>Length: {length}</label>
       </div>
       <div className="flex items-center gap-x-1">
       <input
           type="checkbox"
           defaultChecked={numberAllowed}
           id="numberInput"
+          onChange={() => setNumberAllowed((prev) => !prev)}
       />
       <label htmlFor="numberInput">Numbers</label>
       </div>
@@ -72,6 +89,7 @@ export function App() {
               type="checkbox"
               defaultChecked={charAllowed}
               id="characterInput"
+              onChange={() => setCharAllowed((prev) => !prev)}
           />
           <label htmlFor="characterInput">Characters</label>
       </div>
