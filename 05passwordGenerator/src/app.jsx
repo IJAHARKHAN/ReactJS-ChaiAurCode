@@ -6,18 +6,24 @@ export function App() {
   const [numberAllowed, setNumberAllowed] = useState(false)
   const [charAllowed, setCharAllowed] = useState(false)
   const [password, setPassword] = useState('')
+  
 
   /// useCallback uses for chache memory (store in memory)
   const passwordGenerator = useCallback(() => {
     let pass = ""
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"      
     if(numberAllowed) str += "0123456789"
     if(charAllowed) str += "!@#$%^&*-_+=[]{}~`"
+
+    // let char1 = Math.random() * str.length
+    // let char2 = Math.random() * str.length + 1
+    // let char3 = Math.floor(Math.random() * str.length + 1)      
+    // console.log('char1:', char1, 'char2:', char2, 'char3:', char3)
 
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1)
       pass += str.charAt(char)
-      // console.table('passInner:', pass, 'Char:', char)
+      // console.log('passInner:', pass, 'Char:', char)
     }
 
     setPassword(pass)
@@ -29,7 +35,7 @@ export function App() {
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
-    passwordRef.current?.setSelectionRange(0, 999);
+    passwordRef.current?.setSelectionRange(0, 99);
     window.navigator.clipboard.writeText(password)
   }, [password])
 
